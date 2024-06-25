@@ -1,5 +1,4 @@
 import pygame
-from sys import exit
 import ast
 from client.client import Client
     

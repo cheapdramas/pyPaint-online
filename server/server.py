@@ -1,7 +1,6 @@
 import socket
 import threading
-import sys
-import ast
+
 
 host= socket.gethostbyname(socket.gethostname())
 port=5555
