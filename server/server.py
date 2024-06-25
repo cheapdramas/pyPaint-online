@@ -1,34 +1,85 @@
-from fastapi import FastAPI,WebSocket,WebSocketDisconnect
-from fastapi.testclient import TestClient
-import uvicorn
-import asyncio
-from connectionmanager import ConnectionManager
+import socket
+import threading
+import sys
+import ast
 
-app = FastAPI()
-manager = ConnectionManager()
+host= socket.gethostbyname(socket.gethostname())
+port=5555
+HEADER=64
 
+s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
-@app.websocket('/ws')
-async def websocket_endpoint(websocket:WebSocket):
-    await manager.connect(websocket)
-    try:
-        while True:
-            
-            data = await websocket.receive_text()
-            print(data)
-            
-            
-            await websocket.send_text(f'Message text was: {data}')
-    except WebSocketDisconnect:
-        manager.disconnect(websocket)
+try:
+    s.bind((host,port))
+except:
+    print('error while binding')
+coordinates = {
+    0:str(tuple()),
+    1:str(tuple())
+}
+
+current_player = 0
+def handle_client(conn,addr,player):
+    if player >1:
+        conn.close()
+    global coordinates,current_player
     
-    except:
-        pass
+   
+    print(str(addr) + 'joined!')
+    connected = True
+    
+    while connected:
+        
+        msg_len = conn.recv(HEADER).decode('utf-8')
+
         
 
+        if msg_len:
+            msg_len = int(msg_len)
+
+
+
+            message=conn.recv(msg_len).decode('utf-8')
+            
+
+            if message == '!LEAVE':
+                connected = False
+                
+            
+
+            if player == 0:
+                coordinates[player]=message
+                reply = coordinates[1]
+
+            if player == 1:
+                coordinates[player] = message
+                reply = coordinates[0]
+
+            
+    
+            conn.sendall(reply.encode('utf-8'))
+
+
+    conn.close()
+    
+    current_player -= 1
+    
+   
+
+
+def start():
+    global current_player
+    s.listen(2)
+
+    while True:
+        
+        conn,addr = s.accept()
+        thread= threading.Thread(target=handle_client,args=(conn,addr,current_player))
+        thread.start()
+        current_player += 1
 
 
 
 
-if __name__ =='__main__':
-    uvicorn.run('server:app',reload=True,port=8000)
+print('starting server.../...')
+start()
