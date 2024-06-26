@@ -48,19 +48,18 @@ opp_circles = []
 def get_opposite_draw(my_coordinates:str):
    
     opposite_draw = client.send(my_coordinates)
-    #((x,y),(x,y))
+    #(x,y)
     
     opposite_draw = ast.literal_eval(opposite_draw)
     if opposite_draw != ():
         opp_circles.append(opposite_draw)
-        try:
-            for i in range(len(opp_circles) -1):
-                pygame.draw.line(window,(255,255,255),opp_circles[i],opp_circles[i+1],6)
-        except:
-            pass
+      
+        for i in range(len(opp_circles) -1):
+            pygame.draw.line(window,(255,255,255),opp_circles[i],opp_circles[i+1],6)
+        
     if opposite_draw == ():
         opp_circles.clear()
-        
+
 
     
             
@@ -75,9 +74,9 @@ while True:
     
     
   
-   
-    get_opposite_draw(str(last_circle))
-    
+    if client.connected:
+        get_opposite_draw(str(last_circle))
+
 
 
     if draw_avaible:
@@ -113,6 +112,3 @@ while True:
 
     clock.tick(120)
     pygame.display.flip()
-
-
-        
