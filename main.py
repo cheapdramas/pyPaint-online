@@ -22,16 +22,14 @@ class Testrect(pygame.Rect):
        self.height=0.1
        
 
-last_line =[]
-
-last_tuple = ()
+last_circle = ()
 def draw():
-    global circles,last_line,last_tuple
+    global circles,last_circle
     circle = Testrect()
     circle.center=pygame.mouse.get_pos()
     circles.append(circle)
     
-    last_line.append(circle.center)
+    last_circle = circle.center
 
 
     for i in range(len(circles)-1):
@@ -42,26 +40,28 @@ def draw():
                 #last_line = (circles[i].center,circles[i+1].center)
         except:
             pass
-    if len(last_line) == 2:
-        last_tuple = (last_line[0],last_line[1])
-        last_line.clear()
+    
 
 
 
-opp_draw =[]
+opp_circles = []
 def get_opposite_draw(my_coordinates:str):
-    global opp_draw
+   
     opposite_draw = client.send(my_coordinates)
     #((x,y),(x,y))
     
     opposite_draw = ast.literal_eval(opposite_draw)
-    print(opposite_draw)
     if opposite_draw != ():
-        opp_draw.append(opposite_draw[0])
-        opp_draw.append(opposite_draw[1])
-        for i in range(len(opp_draw)-1):
-            
-            pygame.draw.line(window,(255,255,255),opp_draw[i],opp_draw[i+1],6)
+        opp_circles.append(opposite_draw)
+        try:
+            for i in range(len(opp_circles) -1):
+                pygame.draw.line(window,(255,255,255),opp_circles[i],opp_circles[i+1],6)
+        except:
+            pass
+    if opposite_draw == ():
+        opp_circles.clear()
+        
+
     
             
             
@@ -76,7 +76,7 @@ while True:
     
   
    
-    get_opposite_draw(str(last_tuple))
+    get_opposite_draw(str(last_circle))
     
 
 
@@ -102,7 +102,7 @@ while True:
                 circles.clear()
                 if client.connected:
                     
-                    last_tuple = '()'
+                    last_circle = '()'
 
         
 
