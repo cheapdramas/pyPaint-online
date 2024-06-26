@@ -22,47 +22,62 @@ class Testrect(pygame.Rect):
        self.height=0.1
        
 
-last_line = ()
+last_line =[]
 
-
+last_tuple = ()
 def draw():
-    global circles,coords,last_line
+    global circles,last_line,last_tuple
     circle = Testrect()
     circle.center=pygame.mouse.get_pos()
     circles.append(circle)
     
-
+    last_line.append(circle.center)
 
 
     for i in range(len(circles)-1):
         try:
             if not circles[i].colliderect( circles[i+1]):
-                
+              
                 a = pygame.draw.line(window,(255,255,255),circles[i].center,circles[i+1].center,6)
-                last_line = (circles[i].center,circles[i+1].center)
+                #last_line = (circles[i].center,circles[i+1].center)
         except:
             pass
+    if len(last_line) == 2:
+        last_tuple = (last_line[0],last_line[1])
+        last_line.clear()
 
 
+
+opp_draw =[]
 def get_opposite_draw(my_coordinates:str):
-
+    global opp_draw
     opposite_draw = client.send(my_coordinates)
     #((x,y),(x,y))
+    
     opposite_draw = ast.literal_eval(opposite_draw)
+    print(opposite_draw)
     if opposite_draw != ():
-        pygame.draw.line(window,(255,255,255),opposite_draw[0],opposite_draw[1],6)
-
+        opp_draw.append(opposite_draw[0])
+        opp_draw.append(opposite_draw[1])
+        for i in range(len(opp_draw)-1):
+            
+            pygame.draw.line(window,(255,255,255),opp_draw[i],opp_draw[i+1],6)
+    
+            
+            
 
 draw_avaible = False
 
 
 
 while True:
-    print(client.connected)
-    try:
-        get_opposite_draw(str(last_line))
-    except:
-        print('i guess service is unavaible')
+    
+    
+    
+  
+   
+    get_opposite_draw(str(last_tuple))
+    
 
 
     if draw_avaible:
@@ -85,6 +100,10 @@ while True:
             if event.button == 1:
                 draw_avaible= False
                 circles.clear()
+                if client.connected:
+                    
+                    last_tuple = '()'
+
         
 
         if event.type == pygame.KEYDOWN:
@@ -92,7 +111,7 @@ while True:
                 circles.clear()
                 window.fill((0,0,0))
 
-
+    clock.tick(120)
     pygame.display.flip()
 
 

@@ -1,6 +1,6 @@
 import socket
 import threading
-
+import ast
 
 host= socket.gethostbyname(socket.gethostname())
 port=5555
@@ -45,23 +45,27 @@ def handle_client(conn,addr,player):
                 connected = False
                 
             
+            try:
+                ast.literal_eval(message)
+                if player == 0:
+                    coordinates[player]=message
+                    reply = coordinates[1]
 
-            if player == 0:
-                coordinates[player]=message
-                reply = coordinates[1]
-
-            if player == 1:
-                coordinates[player] = message
-                reply = coordinates[0]
+                if player == 1:
+                    coordinates[player] = message
+                    reply = coordinates[0]
+            except:
+                reply = '()'
 
             
-    
             conn.sendall(reply.encode('utf-8'))
 
 
     conn.close()
     
     current_player -= 1
+    print(str(addr)+' disconnected')
+
     
    
 
