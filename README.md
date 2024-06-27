@@ -1,8 +1,7 @@
 ### Instruction
 
-- Run server
-- Run first client
-- Run second client
+- Run server.py first 
+- Run main.py 
 
 ### Controls
 - To clear screen press C
