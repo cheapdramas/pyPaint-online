@@ -44,26 +44,38 @@ def draw():
 
 
 
+
+
 opp_circles = []
 def get_opposite_draw(my_coordinates:str):
+    
+    whose_coords = {}
    
     opposite_draw = client.send(my_coordinates)
     #(x,y)
     
     opposite_draw = ast.literal_eval(opposite_draw)
-    if opposite_draw != ():
-        opp_circles.append(opposite_draw)
-      
-        for i in range(len(opp_circles) -1):
-            pygame.draw.line(window,(255,255,255),opp_circles[i],opp_circles[i+1],6)
-        
-    if opposite_draw == ():
-        opp_circles.clear()
+    for i in range(len(opposite_draw)):
+        whose_coords[i] = ast.literal_eval(opposite_draw[i])
 
 
+    if len(opp_circles) < len(whose_coords):
+        for i in range(len(whose_coords) - len(opp_circles)):
+            opp_circles.append([])
     
-            
-            
+    for k,v in whose_coords.items():
+        if v != ():
+            opp_circles[k].append(v)
+        if v == ():
+            opp_circles[k] = []
+    
+    for list_coord in opp_circles:
+        for i in range(len(list_coord) -1):
+            pygame.draw.line(window,(255,255,255),list_coord[i],list_coord[i+1],6)
+     
+
+
+
 
 draw_avaible = False
 
@@ -72,16 +84,13 @@ draw_avaible = False
 while True:
     
     
-    
   
     if client.connected:
         get_opposite_draw(str(last_circle))
 
 
-
     if draw_avaible:
         draw()
-
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

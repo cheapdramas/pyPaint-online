@@ -13,15 +13,15 @@ try:
 except:
     print('error while binding')
 coordinates = {
-    0:str(tuple()),
-    1:str(tuple())
+    
 }
 
 current_player = 0
 def handle_client(conn,addr,player):
-    if player >1:
-        conn.close()
+    
+    
     global coordinates,current_player
+    coordinates[player] = '()'
     
    
     print(str(addr) + 'joined!')
@@ -44,25 +44,27 @@ def handle_client(conn,addr,player):
             if message == '!LEAVE':
                 connected = False
                 
-            
-            try:
-                ast.literal_eval(message)
-                if player == 0:
-                    coordinates[player]=message
-                    reply = coordinates[1]
+            else:
+                try:
 
-                if player == 1:
                     coordinates[player] = message
-                    reply = coordinates[0]
-            except:
-                reply = '()'
+                    reply = str([coordinates[i] for i in coordinates.keys() if i != player])
+                    # if player == 0:
+                    #     coordinates[player]=message
+                    #     reply = coordinates[1]
 
-            
+                    # if player == 1:
+                    #     coordinates[player] = message
+                    #     reply = coordinates[0]
+                except:
+                    reply = '[]'
+
+            print(reply)
             conn.sendall(reply.encode('utf-8'))
 
 
     conn.close()
-    
+    coordinates.pop(current_player)
     current_player -= 1
     print(str(addr)+' disconnected')
 
@@ -72,7 +74,7 @@ def handle_client(conn,addr,player):
 
 def start():
     global current_player
-    s.listen(2)
+    s.listen()
 
     while True:
         
