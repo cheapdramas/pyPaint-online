@@ -97,6 +97,7 @@ while True:
             if client.connected:
                 client.send('!LEAVE')
             pygame.quit()
+            exit()
 
 
         if event.type == pygame.MOUSEBUTTONDOWN:

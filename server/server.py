@@ -1,6 +1,7 @@
 import socket
 import threading
 import ast
+from sys import exit
 
 host= socket.gethostbyname(socket.gethostname())
 port=5555
@@ -64,7 +65,7 @@ def handle_client(conn,addr,player):
 
 
     conn.close()
-    coordinates.pop(current_player)
+    coordinates.pop(player)
     current_player -= 1
     print(str(addr)+' disconnected')
 
