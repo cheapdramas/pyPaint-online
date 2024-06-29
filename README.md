@@ -8,6 +8,6 @@
 - To draw press left mouse button
 
 
-#Requirements
+# Requirements
 
 only pygame ;)
