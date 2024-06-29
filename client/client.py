@@ -37,7 +37,7 @@ class Client():
 
             
 
-            coordinates = self.client.recv(2048*10000).decode(self.FORMAT)
+            coordinates = self.client.recv(2048).decode(self.FORMAT)
             return coordinates
         
    

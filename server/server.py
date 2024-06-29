@@ -50,13 +50,7 @@ def handle_client(conn,addr,player):
 
                     coordinates[player] = message
                     reply = str([coordinates[i] for i in coordinates.keys() if i != player])
-                    # if player == 0:
-                    #     coordinates[player]=message
-                    #     reply = coordinates[1]
-
-                    # if player == 1:
-                    #     coordinates[player] = message
-                    #     reply = coordinates[0]
+                    
                 except:
                     reply = '[]'
 
